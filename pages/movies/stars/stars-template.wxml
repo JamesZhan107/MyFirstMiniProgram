@@ -1,0 +1,18 @@
+<template name = "starsTemplate">
+  <view class="stars-container">
+    <view class="stars">
+    <block wx:for="{{stars}}" wx:key="key" wx:for-item="i">
+      <image wx:if="{{i}}" src='/images/icon/star.png'></image>
+      <image wx:else src='/images/icon/none-star.png'></image>
+
+      <!-- 以下方式实现半星
+      [1,1,1,2,0]
+      <image wx:if="{{i==1}}" src=''></image>
+      <image wx:elif="{{i==2}}" src=''></image>
+      <image wx:else src=''></image> -->
+
+    </block>
+    </view> 
+    <text class='stars-scroe'>{{score}}</text>                 
+  </view>
+</template>

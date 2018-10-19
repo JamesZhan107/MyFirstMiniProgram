@@ -1,0 +1,23 @@
+<import src="post-item/post-item-template.wxml" />
+
+<view>
+     <swiper catchtap="onSwiperTap" indicator-dots="true" autoplay="true" interval='2000'> <!--vertical="true"  纵向滚动 -->
+        <swiper-item >
+          <image src="/images/wx.png" data-postId="3"></image>
+        </swiper-item>
+        <swiper-item>
+          <image src="/images/vr.png" data-postId="4"></image>
+        </swiper-item>
+        <swiper-item>
+          <image src="/images/iqiyi.png" data-postId="5"></image>
+       </swiper-item>
+    </swiper>
+
+    <block wx:for="{{posts_key}}" wx:key="key" wx:for-item="item">
+    <!-- data-postId是自定义属性 ，设置此属性是为了让后端获取到前端的点击属性-->
+    <view catchtap='onPostTap' data-postId="{{item.postId}}">
+      <template is="postItem" data = "{{...item}}" />
+    </view>
+      
+    </block>
+</view>

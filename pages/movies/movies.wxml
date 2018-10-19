@@ -1,0 +1,22 @@
+<import src="movie-list/movie-list-template.wxml" />
+<import src="movie-grid/movie-grid-template.wxml" />
+<view class='search'>
+  <icon type="search" size="13" color="#405f80" class='search-img'></icon>
+  <input type="text" placeholder='有什么主意就馊它' placeholder-class='placeholder' bindfocus='onBindFocus' bindchange="onBindChange" />
+  <image wx:if="{{searchPannelShow}}" src='/images/icon/xx.png' bindtap='onCancelImgTap' class='xximg'></image>
+</view>
+<view class='container' wx:if="{{containerShow}}">
+    <view >
+      <template is="movieListTemplate" data="{{...inTheaters}}"/>
+    </view>
+    <view>
+      <template is="movieListTemplate" data="{{...comingSoon}}"/>
+    </view>
+    <view>
+      <template is="movieListTemplate" data="{{...top250}}"/>
+    </view>
+</view>
+
+<view class='search-panel' wx:if="{{searchPannelShow}}">
+  <template is="movieGridTemplate" />
+</view>
