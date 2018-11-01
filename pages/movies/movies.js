@@ -8,7 +8,11 @@ Page({
    */
   data: {
     containerShow:true,
-    searchPannelShow:false
+    searchPannelShow:false,
+    searchtUrl:"",
+    totalCount: 0,
+    isEmpty: true,
+    totalMoviesLength:0,
   },
 
   /**
@@ -64,7 +68,6 @@ Page({
     readyData[settedKey] ={
       movies:movies,
     };
-    console.log(readyData);
     this.setData(readyData);
     //上行代码原理上相当于：
     // this.setData({
@@ -80,11 +83,17 @@ Page({
       })
   },
 
+  onMovieTap: function (event) {
+    var movieId = event.currentTarget.dataset.movieid;
+    wx.navigateTo({
+      url: 'movie-detail/movie-detail?id=' + movieId,
+    })
+  },
+
   onBindFocus:function(event){
     this.setData({
       containerShow:false,
       searchPannelShow: true,
-
     })
   },
 
@@ -92,7 +101,57 @@ Page({
     this.setData({
       containerShow: true,
       searchPannelShow: false,
-
+      movies:[]
     })
-  }
+  },
+
+  onBindconfirm:function(event){
+    var text = event.detail.value;
+    var searchUrl = app.globalData.doubanBase+"/v2/movie/search?q=" + text ;
+    this.data.searchtUrl = searchUrl;
+    util.http(searchUrl, this.searchProcessDouban)
+  },
+
+  onScrollLower: function (event) {
+    var totalMoviesNum = this.data.totalMoviesLength;
+    console.log(totalMoviesNum)
+    var nextUrl = this.data.searchtUrl + "?start=" + this.data.totalCount + "&count=20";
+    util.http(nextUrl, this.searchProcessDouban);
+    wx.showNavigationBarLoading()
+  },
+
+  searchProcessDouban: function (moviesDouban) {
+    var movies = [];
+    for (var idx in moviesDouban.subjects) {
+      var subject = moviesDouban.subjects[idx];
+      var title = subject.title;
+      if (title.length >= 6) {
+        title = title.substring(0, 6) + "...";
+      };
+      var temp = {
+        title: title,
+        average: subject.rating.average,
+        coverageUrl: subject.images.large,
+        movieId: subject.id,
+        stars: util.convertToStarsArray(subject.rating.stars),
+        listTitle: moviesDouban.title,
+      };
+      movies.push(temp);
+    }    
+    var totalMovies={};
+    if (!this.data.isEmpty) {
+      totalMovies = this.data.movies.concat(movies)
+    }
+    else {
+      totalMovies = movies;
+      this.data.isEmpty = false;
+    }
+    this.data.totalMoviesLength = totalMovies.length;
+    this.setData({
+      movies: totalMovies,
+    });
+    this.data.totalCount += 20;
+    wx.hideNavigationBarLoading();
+  },
+
 })

@@ -2,7 +2,7 @@
 var app = getApp();
 var util = require("../../../utils/utils.js");
 
-Page({
+Page({ 
 
   data: {
     navigateTitle:"",
@@ -78,7 +78,7 @@ Page({
     });
   },
 
-  onScrollLower:function(event){
+  onReachBottom:function(event){
     var nextUrl = this.data.requestUrl + "?start=" + this.data.totalCount + "&count=20";
     util.http(nextUrl, this.processDouban);
     wx.showNavigationBarLoading()
@@ -88,8 +88,17 @@ Page({
     var refreshtUrl = this.data.requestUrl + "?start=0&count=20";
     this.data.movies={};
     this.data.isEmpty = true;
+    this.data.totalCount=0;
     util.http(refreshtUrl, this.processDouban);
     wx.showNavigationBarLoading()
-  }
+  },
+
+  onMovieTap: function (event) {
+    var movieId = event.currentTarget.dataset.movieid;
+    wx.navigateTo({
+      url: '../movie-detail/movie-detail?id=' + movieId,
+    })
+  },
+
 
 })

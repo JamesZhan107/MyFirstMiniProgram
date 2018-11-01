@@ -12,7 +12,7 @@ Page({
 
     //跳转的页面位于tabBar中，就需要用switchtab进行跳转
     wx.switchTab({
-      url: '../posts/post',
+      url: '../movies/movies',
     })
   },
 
